@@ -3,12 +3,19 @@ import PageObjects.WebFormPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
-import ui.BaseTest;
+import steps.BaseSteps;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static PageObjects.HomePage.BASE_URL;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WebFormDownloadTest extends BaseTest {
+public class WebFormTest extends BaseSteps {
 
     HomePage homePage;
     WebFormPage webFormPage;
@@ -30,11 +37,19 @@ public class WebFormDownloadTest extends BaseTest {
     }
 
     @Test
-    void testDownloadFile () {
+    void testUploadFile () throws IOException {
+        String filePath = "src/main/resources/testFile.txt";
 
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        System.out.println("Содержимое файла: " + content);
 
+        //получаем урл файла и переводим его в абсолтный путь
+        URL url = WebFormTest.class.getClassLoader().getResource("testFile.txt");
+        String absolutePath = new File(url.getPath()).getAbsolutePath();
 
-
+        webFormPage.getDownloadField().sendKeys(absolutePath);
+        webFormPage.getSubmitButton().click();
+        assertThat(webFormPage.getCurrentUrl().contains("testFile.txt"));
     }
 
 }
