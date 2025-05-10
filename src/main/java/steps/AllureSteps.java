@@ -15,10 +15,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import static com.codeborne.selenide.Screenshots.takeScreenShotAsFile;
 
@@ -66,14 +63,26 @@ public class AllureSteps {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpUriRequestBase request = new HttpGet(link);
             client.execute(request, (HttpClientResponseHandler<byte[]>) response -> {
-                InputStream inputStream = response.getEntity().getContent();
-                FileUtils.copyToFile(inputStream, destination);
 
-                Allure.addAttachment(destination.getName(), inputStream);
-                FileUtils.copyToFile(response.getEntity().getContent(), destination);
+                // создаем временный файл для хранения содержимого
+                File tempFile = File.createTempFile("temp", ".tmp");
 
-                //FileUtils.copyInputStreamToFile(inputStream, destination);
-                //inputStream.close();
+                try (InputStream inputStream = response.getEntity().getContent()) {
+                    // сохраняем содержимое во временный файл
+                    FileUtils.copyInputStreamToFile(inputStream, tempFile);
+                }
+
+                // копируем из временного файла в целевой
+                FileUtils.copyFile(tempFile, destination);
+
+                // добавляем вложение в алюр из временного файла
+                try (InputStream is = new FileInputStream(tempFile)) {
+                    Allure.addAttachment(destination.getName(), is);
+                }
+
+                // удаляем временный файл
+                tempFile.delete();
+
                 return null;
             });
         }

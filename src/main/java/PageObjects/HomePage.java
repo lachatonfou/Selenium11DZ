@@ -24,7 +24,7 @@ public class HomePage extends BasePage{
     }
 
     @Step("Open download files page")
-    public DownloadFilesPage openNavigationPage() {
+    public DownloadFilesPage openDownloadFilesPage() {
         driver.findElement(By.xpath("//a[@href = 'download.html']")).click();
         return new DownloadFilesPage(driver);
     }
