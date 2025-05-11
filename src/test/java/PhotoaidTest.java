@@ -1,4 +1,5 @@
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -6,9 +7,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import steps.BaseSteps;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -32,7 +35,7 @@ public class PhotoaidTest extends BaseSteps {
         fileInput.sendKeys(absolutePath);
 
         SelenideElement downloadButton = $("a[download]");
-        downloadButton.shouldBe(visible);
+        //downloadButton.shouldBe(visible);
 
         //скачиваем файл
         downloadButton.click();

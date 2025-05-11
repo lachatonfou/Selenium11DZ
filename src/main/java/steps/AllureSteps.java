@@ -1,10 +1,12 @@
 package steps;
 
+import com.codeborne.selenide.SelenideElement;
 import com.google.common.io.Files;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +18,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 
 import java.io.*;
+import java.util.Base64;
 
 import static com.codeborne.selenide.Screenshots.takeScreenShotAsFile;
 
